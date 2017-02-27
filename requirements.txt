@@ -1,0 +1,4 @@
+-r code/requirements.txt
+awscli==1.11.52
+Fabric==1.13.1
+boto3==1.4.4
