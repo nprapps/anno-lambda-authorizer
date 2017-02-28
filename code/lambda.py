@@ -32,12 +32,14 @@ def lambda_handler(event, context):
             decoded = jwt.decode(token, JWT_SECRET,
                                  issuer=ISSUER, audience=AUDIENCE)
         except jwt.exceptions.InvalidTokenError, e:
-            logger.error("JWT decode error: %s" % e)
-            raise Exception('Decode has failed')
+            logger.error('JWT decode error: %s' % e)
+            raise
         logger.debug(decoded)
         principalId = decoded['principal']
         if principalId != EXPECTED_PRINCIPAL:
-            raise Exception('Token does not match expected principal')
+            msg = 'Token does not match expected principal'
+            logger.error(msg)
+            raise Exception(msg)
         tmp = event['methodArn'].split(':')
         apiGatewayArnTmp = tmp[5].split('/')
         awsAccountId = tmp[4]
