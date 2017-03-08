@@ -123,10 +123,10 @@ def render(name):
             execute('generateVirtualEnvironment', name)
         try:
             # First zip all library dependencies
-            zip_contents('code', 'code/venv/lib/python2.7/site-packages',
+            zip_contents('code', '%s/venv/lib/python2.7/site-packages' % name,
                          ['.git'], ['.pyc'], 'w')
             # Add source files
-            zip_contents('code', 'code',
+            zip_contents('code', name,
                          ['venv'], ['.pyc'], 'a')
         except Exception, e:
             logger.error("Exit with uncaptured exception %s" % (e))
@@ -134,11 +134,11 @@ def render(name):
 
     else:
         # Add source files
-        zip_contents('code', 'code', None, ['.pyc'], 'w')
+        zip_contents('code', name, None, ['.pyc'], 'w')
 
 
 @task
-def deploy(name, function='anno-docs-authorizer'):
+def deploy(name='code', function='anno-docs-authorizer'):
     execute('render', name)
     command = 'aws lambda update-function-code'
     command += ' --zip-file=fileb://zip/%s.zip' % (name)
